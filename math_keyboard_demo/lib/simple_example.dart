@@ -2,17 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:math_keyboard/math_keyboard.dart';
 
-void main() {
-  runApp(const ExampleApp());
-}
-
 /// Example app demonstrating how to use the `math_keyboard` package.
-class ExampleApp extends StatelessWidget {
-  /// Creates an [ExampleApp] widget.
-  const ExampleApp({Key? key}) : super(key: key);
+class SimpleExample extends StatelessWidget {
+  /// Creates an [SimpleExample] widget.
+  const SimpleExample({final Key? key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(final BuildContext context) {
     return MaterialApp(
       title: 'Math Keyboard Demo',
       supportedLocales: const [
@@ -39,7 +35,7 @@ class ExampleApp extends StatelessWidget {
 /// Widget for a page demonstrating how to use the `math_keyboard` package.
 class DemoPage extends StatefulWidget {
   /// Creates a [DemoPage] widget.
-  const DemoPage({Key? key}) : super(key: key);
+  const DemoPage({final Key? key}) : super(key: key);
 
   @override
   _DemoPageState createState() => _DemoPageState();
@@ -49,7 +45,7 @@ class _DemoPageState extends State<DemoPage> {
   var _currentIndex = 0;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(final BuildContext context) {
     Widget child;
     if (_currentIndex == 0) {
       child = const _MathFieldTextFieldExample();
@@ -59,7 +55,7 @@ class _DemoPageState extends State<DemoPage> {
           padding: EdgeInsets.all(16),
           child: Text(
             'The math keyboard should be automatically dismissed when '
-            'switching to this page.',
+                'switching to this page.',
             textAlign: TextAlign.center,
           ),
         ),
@@ -82,7 +78,7 @@ class _DemoPageState extends State<DemoPage> {
             // top of the keyboard.
             BottomNavigationBar(
               currentIndex: _currentIndex,
-              onTap: (index) {
+              onTap: (final index) {
                 setState(() {
                   _currentIndex = index;
                 });
@@ -113,10 +109,10 @@ class _DemoPageState extends State<DemoPage> {
 /// field for comparison.
 class _MathFieldTextFieldExample extends StatelessWidget {
   /// Constructs a [_MathFieldTextFieldExample] widget.
-  const _MathFieldTextFieldExample({Key? key}) : super(key: key);
+  const _MathFieldTextFieldExample({final Key? key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(final BuildContext context) {
     return SafeArea(
       child: ListView(
         children: [
@@ -128,11 +124,11 @@ class _MathFieldTextFieldExample extends StatelessWidget {
             padding: const EdgeInsets.all(16),
             child: MathField(
               variables: const ['a', 's', 'c'],
-              onChanged: (value) {
+              onChanged: (final value) {
                 String expression;
                 try {
                   expression = '${TeXParser(value).parse()}';
-                } catch (_) {
+                } on Object catch (_) {
                   expression = 'invalid input';
                 }
 
@@ -157,7 +153,7 @@ class _MathFieldTextFieldExample extends StatelessWidget {
 /// outside and automatically receives focus.
 class _ClearableAutofocusExample extends StatefulWidget {
   /// Constructs a [_ClearableAutofocusExample] widget.
-  const _ClearableAutofocusExample({Key? key}) : super(key: key);
+  const _ClearableAutofocusExample({final Key? key}) : super(key: key);
 
   @override
   _ClearableAutofocusExampleState createState() =>
@@ -175,7 +171,7 @@ class _ClearableAutofocusExampleState
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(final BuildContext context) {
     return SafeArea(
       child: ListView(
         children: [
@@ -201,8 +197,7 @@ class _ClearableAutofocusExampleState
           const Padding(
             padding: EdgeInsets.all(16),
             child: Text(
-              'The math field on this tab should automatically receive '
-              'focus.',
+              'The math field on this tab should automatically receive focus.',
               textAlign: TextAlign.center,
             ),
           ),

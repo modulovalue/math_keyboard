@@ -1,12 +1,305 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:math_expressions/math_expressions.dart';
 import 'package:math_keyboard/math_keyboard.dart';
+import 'package:url_launcher/url_launcher.dart';
+
+import 'resources.dart';
+
+/// Demo application for `math_keyboard`.
+class Example extends StatefulWidget {
+  /// Constructs a [Example].
+  const Example({
+    final Key? key,
+  }) : super(key: key);
+
+  @override
+  _ExampleState createState() => _ExampleState();
+}
+
+class _ExampleState extends State<Example> {
+  var _darkMode = false;
+
+  @override
+  Widget build(final BuildContext context) {
+    return MaterialApp(
+      title: appTitle,
+      theme: ThemeData(
+        brightness: _darkMode ? Brightness.dark : Brightness.light,
+        colorScheme: ColorScheme.fromSwatch(
+          primarySwatch: Colors.amber,
+        ).copyWith(
+          secondary: Colors.amberAccent,
+        ),
+      ),
+      home: DemoScaffold(
+        onToggleBrightness: () {
+          setState(() {
+            _darkMode = !_darkMode;
+          });
+        },
+      ),
+    );
+  }
+}
+
+/// Scaffold for the demo page.
+class DemoScaffold extends StatelessWidget {
+  /// Creates a [DemoScaffold] widget.
+  const DemoScaffold({
+    required final this.onToggleBrightness,
+    final Key? key,
+  }) : super(key: key);
+
+  /// Called when the brightness toggle is tapped.
+  final void Function() onToggleBrightness;
+
+  @override
+  Widget build(
+    final BuildContext context,
+  ) {
+    final darkMode = Theme.of(context).brightness == Brightness.dark;
+    final buttons = [
+      LinkButton(
+        label: pubLabel,
+        url: pubUrl,
+        child: SvgPicture.network(pubBadgeUrl),
+      ),
+      LinkButton(
+        label: gitHubLabel,
+        url: gitHubUrl,
+        child: Stack(
+          children: [
+            // Always insert both icons into the tree in order to prevent the
+            // layout from jumping around when changing the brightness (because
+            // the dark version would need to be loaded later).
+            Image.network(darkGitHubIconUrl),
+            if (!darkMode) Image.network(lightGitHubIconUrl),
+          ],
+        ),
+      ),
+      const LinkButton(
+        label: docsLabel,
+        url: docsUrl,
+      ),
+    ];
+    SystemChrome.setSystemUIOverlayStyle(darkMode ? SystemUiOverlayStyle.light : SystemUiOverlayStyle.dark);
+    return MathKeyboardViewInsets(
+      child: Scaffold(
+        appBar: PreferredSize(
+          preferredSize: const Size(0, 42 + 16 * 2),
+          child: Column(
+            children: [
+              Expanded(
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    IconButton(
+                      tooltip: brightnessSwitchTooltip,
+                      onPressed: onToggleBrightness,
+                      splashRadius: 20,
+                      icon: Icon(darkMode ? Icons.brightness_6_outlined : Icons.brightness_2_outlined),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(
+                        left: 3,
+                        bottom: 3,
+                      ),
+                      child: MouseRegion(
+                        cursor: MaterialStateMouseCursor.clickable,
+                        child: GestureDetector(
+                          onTap: () {
+                            launch(gitHubUrl);
+                          },
+                          child: Text(
+                            header,
+                            style: Theme.of(context).textTheme.headline5?.copyWith(
+                                  fontWeight: FontWeight.w500,
+                                ),
+                            textAlign: TextAlign.center,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              const Divider(
+                thickness: 1,
+                height: 0,
+              ),
+            ],
+          ),
+        ),
+        body: Column(
+          children: [
+            Expanded(
+              child: Material(
+                child: SingleChildScrollView(
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(
+                      vertical: 32,
+                    ),
+                    child: LayoutBuilder(
+                      builder: (final context, final constraints) {
+                        return Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.only(
+                                left: 64,
+                                right: 64,
+                                bottom: 8,
+                              ),
+                              child: Text.rich(
+                                TextSpan(
+                                  children: const [
+                                    TextSpan(
+                                      text: descriptionPrefix,
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        fontStyle: FontStyle.italic,
+                                      ),
+                                    ),
+                                    TextSpan(
+                                      text: ' $description',
+                                    ),
+                                  ],
+                                  style: Theme.of(context).textTheme.headline5?.copyWith(
+                                        fontSize: 28,
+                                      ),
+                                ),
+                                textAlign: TextAlign.center,
+                              ),
+                            ),
+                            if (constraints.maxWidth < 6e2) ...[
+                              for (final button in buttons)
+                                Padding(
+                                  padding: const EdgeInsets.all(4),
+                                  child: button,
+                                ),
+                            ] else
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  for (final button in buttons)
+                                    Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                        vertical: 8,
+                                        horizontal: 16,
+                                      ),
+                                      child: button,
+                                    ),
+                                ],
+                              ),
+                            const Padding(
+                              padding: EdgeInsets.only(
+                                top: 32,
+                              ),
+                              child: DemoPageView(),
+                            ),
+                          ],
+                        );
+                      },
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
+        bottomNavigationBar: SizedBox(
+          height: 42 + 16 * 2,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const Divider(
+                thickness: 1,
+                height: 0,
+              ),
+              MouseRegion(
+                cursor: MaterialStateMouseCursor.clickable,
+                child: GestureDetector(
+                  onTap: () {
+                    launch(organizationUrl);
+                  },
+                  child: Padding(
+                    padding: const EdgeInsets.all(16),
+                    child: Image.network(
+                      darkMode ? darkLogoUrl : lightLogoUrl,
+                      height: 42,
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+/// Stylized button widget for linking to outside resources.
+class LinkButton extends StatelessWidget {
+  /// Constructs a [LinkButton] from a [label], a [url], and an optional
+  /// [child].
+  const LinkButton({
+    required final this.label,
+    required final this.url,
+    final Key? key,
+    final this.child,
+  }) : super(key: key);
+
+  /// Label for the button.
+  final String label;
+
+  /// URL to link to, i.e. to open.
+  final String url;
+
+  /// Icon for this button.
+  ///
+  /// Can be left null.
+  final Widget? child;
+
+  @override
+  Widget build(final BuildContext context) {
+    void onPressed() => launch(url);
+    final style = OutlinedButton.styleFrom(
+      padding: const EdgeInsets.all(16),
+      textStyle: const TextStyle(
+        fontSize: 20,
+        decoration: TextDecoration.underline,
+      ),
+    );
+
+    if (child == null) {
+      return OutlinedButton(
+        onPressed: onPressed,
+        style: style,
+        child: Text(label),
+      );
+    }
+    return OutlinedButton.icon(
+      onPressed: onPressed,
+      style: style,
+      label: Text(label),
+      icon: ConstrainedBox(
+        constraints: const BoxConstraints(
+          maxHeight: 32,
+        ),
+        child: child,
+      ),
+    );
+  }
+}
 
 /// Page view for presenting the features that math_keyboard has to offer.
 class DemoPageView extends StatefulWidget {
-  /// Creates a [DemoPageView] widget.
-  const DemoPageView({final Key? key}) : super(key: key);
+  const DemoPageView({
+    final Key? key,
+  }) : super(key: key);
 
   @override
   _DemoPageViewState createState() => _DemoPageViewState();
@@ -66,7 +359,6 @@ class _DemoPageViewState extends State<DemoPageView> {
       const _Page(child: _MathExpressionsPage()),
       const _Page(child: _FormFieldPage()),
     ];
-
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
@@ -186,7 +478,6 @@ class _PageIndicator extends StatelessWidget {
   @override
   Widget build(final BuildContext context) {
     final size = Size.fromRadius(selected ? 6.5 : 5);
-
     return MouseRegion(
       cursor: MaterialStateMouseCursor.clickable,
       child: GestureDetector(
