@@ -1,7 +1,9 @@
+// ignore_for_file: comment_references
+
 import 'dart:math';
 
 import 'package:flutter/material.dart';
-import 'package:math_keyboard/math_keyboard.dart';
+import '../../math_keyboard.dart';
 
 /// Widget for math keyboards ensuring the content is pushed up by the
 /// keyboards, connected with [MathField]s.
@@ -48,8 +50,8 @@ import 'package:math_keyboard/math_keyboard.dart';
 class MathKeyboardViewInsets extends StatefulWidget {
   /// Creates a [MathKeyboardViewInsets] widget around the [child] widget.
   const MathKeyboardViewInsets({
-    Key? key,
-    required this.child,
+    required final this.child,
+    final Key? key,
   }) : super(key: key);
 
   /// The child widget tree that the math keyboard view insets should report to.
@@ -69,7 +71,7 @@ class MathKeyboardViewInsets extends StatefulWidget {
 /// keyboards. It provides them by inserting a modified [MediaQuery].
 class MathKeyboardViewInsetsState extends State<MathKeyboardViewInsets> {
   /// Returns the ancestor [MathKeyboardViewInsetsState] of the given [context].
-  static MathKeyboardViewInsetsState? of(BuildContext context) {
+  static MathKeyboardViewInsetsState? of(final BuildContext context) {
     return context.findAncestorStateOfType<MathKeyboardViewInsetsState>();
   }
 
@@ -79,7 +81,7 @@ class MathKeyboardViewInsetsState extends State<MathKeyboardViewInsets> {
   ///
   /// Pass `null` for [size] to report that a keyboard has been removed from
   /// the scaffold. This is important for preventing memory leaks.
-  void operator []=(ObjectKey key, double? size) {
+  void operator []=(final ObjectKey key, final double? size) {
     if (!mounted) return;
     if (_keyboardSizes[key] == size) return;
 
@@ -97,14 +99,14 @@ class MathKeyboardViewInsetsState extends State<MathKeyboardViewInsets> {
   /// This will simply take the max value from the [_keyboardSizes] and default
   /// to `0` (when there are no active keyboards).
   double get _bottomInset {
-    return _keyboardSizes.values.fold(0, (previousValue, element) {
+    return _keyboardSizes.values.fold(0, (final previousValue, final element) {
       // We only care about the max inset.
       return max(previousValue, element);
     });
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(final BuildContext context) {
     final mediaQueryData = MediaQuery.of(context);
     final mathKeyboardBottomInset = _bottomInset;
     return MathKeyboardViewInsetsQuery(
@@ -139,20 +141,18 @@ class MathKeyboardViewInsetsQuery extends InheritedWidget {
   /// Creates a [MathKeyboardViewInsetsQuery] that provides the [bottomInset] to
   /// the [child] tree.
   const MathKeyboardViewInsetsQuery({
-    Key? key,
-    required this.bottomInset,
-    required Widget child,
+    required final this.bottomInset,
+    required final Widget child,
+    final Key? key,
   }) : super(key: key, child: child);
 
   /// Depends on and returns an ancestor [MathKeyboardViewInsetsQuery].
-  static MathKeyboardViewInsetsQuery of(BuildContext context) {
-    final result = context
-        .dependOnInheritedWidgetOfExactType<MathKeyboardViewInsetsQuery>();
+  static MathKeyboardViewInsetsQuery of(final BuildContext context) {
+    final result = context.dependOnInheritedWidgetOfExactType<MathKeyboardViewInsetsQuery>();
     if (result != null) {
       return result;
     }
-    throw FlutterError(
-        'MathKeyboardViewInsetsQuery.of() called with a context that does not '
+    throw FlutterError('MathKeyboardViewInsetsQuery.of() called with a context that does not '
         'contain a MathKeyboardViewInsetsQuery.');
   }
 
@@ -161,7 +161,7 @@ class MathKeyboardViewInsetsQuery extends InheritedWidget {
   ///
   /// See [keyboardShowingIn] for a convenience method that also reports about
   /// the regular software keyboard on iOS and Android.
-  static bool mathKeyboardShowingIn(BuildContext context) {
+  static bool mathKeyboardShowingIn(final BuildContext context) {
     return of(context).bottomInset > 0;
   }
 
@@ -208,7 +208,7 @@ class MathKeyboardViewInsetsQuery extends InheritedWidget {
   /// See [the official `WidgetsBindingObserver` example](https://api.flutter.dev/flutter/widgets/WidgetsBindingObserver-class.html#widgets.WidgetsBindingObserver.1)
   /// and make sure to set state on `didChangeMetrics` instead of
   /// `didChangeAppLifecycleState` :)
-  static bool keyboardShowingIn(BuildContext context) {
+  static bool keyboardShowingIn(final BuildContext context) {
     final maxInset = max(
       of(context).bottomInset,
       WidgetsBinding.instance!.window.viewInsets.bottom /
@@ -231,7 +231,7 @@ class MathKeyboardViewInsetsQuery extends InheritedWidget {
   final double bottomInset;
 
   @override
-  bool updateShouldNotify(MathKeyboardViewInsetsQuery oldWidget) {
+  bool updateShouldNotify(final MathKeyboardViewInsetsQuery oldWidget) {
     return bottomInset != oldWidget.bottomInset;
   }
 }

@@ -1,6 +1,7 @@
 import 'package:flutter/widgets.dart';
-import 'package:math_keyboard_demo/widgets/app.dart';
 import 'package:url_strategy/url_strategy.dart';
+
+import 'widgets/app.dart';
 
 void main() {
   setPathUrlStrategy();

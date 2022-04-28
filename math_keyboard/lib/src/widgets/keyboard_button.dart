@@ -14,11 +14,11 @@ import 'package:holding_gesture/holding_gesture.dart';
 class KeyboardButton extends StatefulWidget {
   /// Constructs a [KeyboardButton] widget.
   const KeyboardButton({
-    Key? key,
-    this.onTap,
-    this.onHold,
-    this.color,
-    required this.child,
+    required final this.child,
+    final Key? key,
+    final this.onTap,
+    final this.onHold,
+    final this.color,
   }) : super(key: key);
 
   /// Called when the keyboard button is tapped.
@@ -51,11 +51,11 @@ class _KeyboardButtonState extends State<KeyboardButton>
     super.dispose();
   }
 
-  void _handleTapDown(TapDownDetails details) {
+  void _handleTapDown(final TapDownDetails details) {
     _animationController.forward();
   }
 
-  void _handleTapUp([TapUpDetails? details]) async {
+  Future<void> _handleTapUp([final TapUpDetails? details]) async {
     await _animationController.reverse(from: 1);
   }
 
@@ -69,14 +69,14 @@ class _KeyboardButtonState extends State<KeyboardButton>
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(final BuildContext context) {
     Widget result = RawGestureDetector(
       behavior: HitTestBehavior.opaque,
       gestures: <Type, GestureRecognizerFactory>{
         _AlwaysWinningGestureRecognizer: GestureRecognizerFactoryWithHandlers<
             _AlwaysWinningGestureRecognizer>(
           () => _AlwaysWinningGestureRecognizer(),
-          (_AlwaysWinningGestureRecognizer instance) {
+          (final _AlwaysWinningGestureRecognizer instance) {
             instance
               ..onTap = widget.onTap
               ..onTapUp = _handleTapUp
@@ -94,7 +94,7 @@ class _KeyboardButtonState extends State<KeyboardButton>
           ),
           child: AnimatedBuilder(
             animation: _animationController,
-            builder: (context, child) {
+            builder: (final context, final child) {
               return DecoratedBox(
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(8),
@@ -134,7 +134,7 @@ class _KeyboardButtonState extends State<KeyboardButton>
 /// This prevents buttons with sqrt's from not responding.
 class _AlwaysWinningGestureRecognizer extends TapGestureRecognizer {
   @override
-  void rejectGesture(int pointer) {
+  void rejectGesture(final int pointer) {
     acceptGesture(pointer);
   }
 }

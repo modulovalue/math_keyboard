@@ -11,9 +11,11 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-
   math_keyboard:
     path: ../
+
+dev_dependencies:
+  extra_pedantic: ^2.0.0
 
 flutter:
   uses-material-design: true

@@ -2,24 +2,27 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:math_keyboard/math_keyboard.dart';
-import 'package:math_keyboard_demo/data/strings.dart';
-import 'package:math_keyboard_demo/widgets/link_button.dart';
-import 'package:math_keyboard_demo/widgets/page_view.dart';
 import 'package:url_launcher/url_launcher.dart';
+
+import '../data/strings.dart';
+import 'link_button.dart';
+import 'page_view.dart';
 
 /// Scaffold for the demo page.
 class DemoScaffold extends StatelessWidget {
   /// Creates a [DemoScaffold] widget.
   const DemoScaffold({
-    Key? key,
-    required this.onToggleBrightness,
+    required final this.onToggleBrightness,
+    final Key? key,
   }) : super(key: key);
 
   /// Called when the brightness toggle is tapped.
   final void Function() onToggleBrightness;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(
+    final BuildContext context,
+  ) {
     final darkMode = Theme.of(context).brightness == Brightness.dark;
     final buttons = [
       LinkButton(
@@ -45,14 +48,11 @@ class DemoScaffold extends StatelessWidget {
         url: docsUrl,
       ),
     ];
-
-    SystemChrome.setSystemUIOverlayStyle(
-        darkMode ? SystemUiOverlayStyle.light : SystemUiOverlayStyle.dark);
-
+    SystemChrome.setSystemUIOverlayStyle(darkMode ? SystemUiOverlayStyle.light : SystemUiOverlayStyle.dark);
     return MathKeyboardViewInsets(
       child: Scaffold(
         appBar: PreferredSize(
-          preferredSize: Size(0, 42 + 16 * 2),
+          preferredSize: const Size(0, 42 + 16 * 2),
           child: Column(
             children: [
               Expanded(
@@ -63,9 +63,7 @@ class DemoScaffold extends StatelessWidget {
                       tooltip: brightnessSwitchTooltip,
                       onPressed: onToggleBrightness,
                       splashRadius: 20,
-                      icon: Icon(darkMode
-                          ? Icons.brightness_6_outlined
-                          : Icons.brightness_2_outlined),
+                      icon: Icon(darkMode ? Icons.brightness_6_outlined : Icons.brightness_2_outlined),
                     ),
                     Padding(
                       padding: const EdgeInsets.only(
@@ -80,10 +78,9 @@ class DemoScaffold extends StatelessWidget {
                           },
                           child: Text(
                             header,
-                            style:
-                                Theme.of(context).textTheme.headline5?.copyWith(
-                                      fontWeight: FontWeight.w500,
-                                    ),
+                            style: Theme.of(context).textTheme.headline5?.copyWith(
+                                  fontWeight: FontWeight.w500,
+                                ),
                             textAlign: TextAlign.center,
                           ),
                         ),
@@ -109,7 +106,7 @@ class DemoScaffold extends StatelessWidget {
                       vertical: 32,
                     ),
                     child: LayoutBuilder(
-                      builder: (context, constraints) {
+                      builder: (final context, final constraints) {
                         return Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
@@ -133,10 +130,7 @@ class DemoScaffold extends StatelessWidget {
                                       text: ' $description',
                                     ),
                                   ],
-                                  style: Theme.of(context)
-                                      .textTheme
-                                      .headline5
-                                      ?.copyWith(
+                                  style: Theme.of(context).textTheme.headline5?.copyWith(
                                         fontSize: 28,
                                       ),
                                 ),

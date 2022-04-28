@@ -67,7 +67,6 @@ class _DemoPageState extends State<DemoPage> {
     } else {
       child = const _ClearableAutofocusExample();
     }
-
     return MathKeyboardViewInsets(
       child: Scaffold(
         appBar: AppBar(

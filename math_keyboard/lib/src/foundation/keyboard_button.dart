@@ -1,5 +1,5 @@
 import 'package:flutter/services.dart';
-import 'package:math_keyboard/src/foundation/node.dart';
+import 'node.dart';
 
 /// Class representing a button configuration.
 abstract class KeyboardButtonConfig {
@@ -24,17 +24,18 @@ abstract class KeyboardButtonConfig {
   final List<String> keyboardCharacters;
 }
 
+// ignore: comment_references
 /// Class representing a button configuration for a [FunctionButton].
 class BasicKeyboardButtonConfig extends KeyboardButtonConfig {
   /// Constructs a [KeyboardButtonConfig].
   const BasicKeyboardButtonConfig({
-    required this.label,
-    required this.value,
-    this.args,
-    this.asTex = false,
-    this.highlighted = false,
-    List<String> keyboardCharacters = const [],
-    int? flex,
+    required final this.label,
+    required final this.value,
+    final this.args,
+    final this.asTex = false,
+    final this.highlighted = false,
+    final List<String> keyboardCharacters = const [],
+    final int? flex,
   }) : super(
           flex: flex,
           keyboardCharacters: keyboardCharacters,
@@ -59,31 +60,31 @@ class BasicKeyboardButtonConfig extends KeyboardButtonConfig {
 /// Class representing a button configuration of the Delete Button.
 class DeleteButtonConfig extends KeyboardButtonConfig {
   /// Constructs a [DeleteButtonConfig].
-  DeleteButtonConfig({int? flex}) : super(flex: flex);
+  DeleteButtonConfig({final int? flex}) : super(flex: flex);
 }
 
 /// Class representing a button configuration of the Previous Button.
 class PreviousButtonConfig extends KeyboardButtonConfig {
   /// Constructs a [DeleteButtonConfig].
-  PreviousButtonConfig({int? flex}) : super(flex: flex);
+  PreviousButtonConfig({final int? flex}) : super(flex: flex);
 }
 
 /// Class representing a button configuration of the Next Button.
 class NextButtonConfig extends KeyboardButtonConfig {
   /// Constructs a [DeleteButtonConfig].
-  NextButtonConfig({int? flex}) : super(flex: flex);
+  NextButtonConfig({final int? flex}) : super(flex: flex);
 }
 
 /// Class representing a button configuration of the Submit Button.
 class SubmitButtonConfig extends KeyboardButtonConfig {
   /// Constructs a [SubmitButtonConfig].
-  SubmitButtonConfig({int? flex}) : super(flex: flex);
+  SubmitButtonConfig({final int? flex}) : super(flex: flex);
 }
 
 /// Class representing a button configuration of the Page Toggle Button.
 class PageButtonConfig extends KeyboardButtonConfig {
   /// Constructs a [PageButtonConfig].
-  const PageButtonConfig({int? flex}) : super(flex: flex);
+  const PageButtonConfig({final int? flex}) : super(flex: flex);
 }
 
 /// List of keyboard button configs for the digits from 0-9.

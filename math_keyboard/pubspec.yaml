@@ -14,7 +14,6 @@ dependencies:
     sdk: flutter
   flutter_localizations:
     sdk: flutter
-
   flutter_math_fork: ^0.6.2
   holding_gesture: ^1.1.0
   intl: ^0.17.0
@@ -22,10 +21,9 @@ dependencies:
   petitparser: ^4.0.2
 
 dev_dependencies:
+  extra_pedantic: ^2.0.0
   flutter_test:
     sdk: flutter
-
-  pedantic: ^1.11.0
 
 flutter:
   fonts:

@@ -9,14 +9,13 @@ import 'package:intl/number_symbols_data.dart';
 ///
 /// Defaults to `.` as a decimal separator if none is found in
 /// [numberFormatSymbols] for the current locale.
-String decimalSeparator(BuildContext context) {
+String decimalSeparator(final BuildContext context) {
   final locale = Localizations.localeOf(context);
   final numberFormatVerifiedLocale = Intl.verifiedLocale(
     '${locale.languageCode}_${locale.countryCode}',
     NumberFormat.localeExists,
   );
-
-  final symbols = numberFormatSymbols[numberFormatVerifiedLocale];
+  final dynamic symbols = numberFormatSymbols[numberFormatVerifiedLocale];
   if (symbols is NumberSymbols) {
     return symbols.DECIMAL_SEP;
   }

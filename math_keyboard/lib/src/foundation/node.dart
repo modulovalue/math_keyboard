@@ -70,7 +70,7 @@ class TeXNode {
   }
 
   /// Adds a new node.
-  void addTeX(TeX teX) {
+  void addTeX(final TeX teX) {
     children.insert(courserPosition, teX);
     courserPosition++;
   }
@@ -95,7 +95,7 @@ class TeXNode {
   /// This includes the representation of the children of the node.
   ///
   /// Returns the TeX expression as a [String].
-  String buildTeXString({Color? cursorColor}) {
+  String buildTeXString({final Color? cursorColor}) {
     if (children.isEmpty) {
       return '\\Box';
     }
@@ -115,10 +115,10 @@ class TeXFunction extends TeX {
   /// case, the [TeXNode.parent] is set in the constructor body. If [argNodes]
   /// is passed empty (default), empty [TeXNode]s will be inserted for each
   /// arg.
-  TeXFunction(String expression, this.parent, this.args,
-      [List<TeXNode>? argNodes])
+  TeXFunction(final String expression, this.parent, this.args,
+      [final List<TeXNode>? argNodes])
       : assert(args.isNotEmpty, 'A function needs at least one argument.'),
-        assert(argNodes == null || argNodes.length == args.length),
+        assert(argNodes == null || argNodes.length == args.length, ""),
         argNodes = argNodes ?? List.empty(growable: true),
         super(expression) {
     if (this.argNodes.isEmpty) {
@@ -142,31 +142,31 @@ class TeXFunction extends TeX {
   final List<TeXNode> argNodes;
 
   /// Returns the opening character for a function argument.
-  String openingChar(TeXArg type) {
+  String openingChar(final TeXArg type) {
     switch (type) {
       case TeXArg.braces:
         return '{';
       case TeXArg.brackets:
         return '[';
-      default:
+      case TeXArg.parentheses:
         return '(';
     }
   }
 
   /// Returns the closing character for a function argument.
-  String closingChar(TeXArg type) {
+  String closingChar(final TeXArg type) {
     switch (type) {
       case TeXArg.braces:
         return '}';
       case TeXArg.brackets:
         return ']';
-      default:
+      case TeXArg.parentheses:
         return ')';
     }
   }
 
   @override
-  String buildString({Color? cursorColor}) {
+  String buildString({final Color? cursorColor}) {
     final buffer = StringBuffer(expression);
     for (var i = 0; i < args.length; i++) {
       buffer.write(openingChar(args[i]));
@@ -180,10 +180,10 @@ class TeXFunction extends TeX {
 /// Class holding a single TeX expression.
 class TeXLeaf extends TeX {
   /// Constructs a [TeXLeaf].
-  const TeXLeaf(String expression) : super(expression);
+  const TeXLeaf(final String expression) : super(expression);
 
   @override
-  String buildString({Color? cursorColor}) {
+  String buildString({final Color? cursorColor}) {
     return expression;
   }
 }
@@ -197,7 +197,7 @@ abstract class TeX {
   final String expression;
 
   /// Builds the string representation of this TeX expression.
-  String buildString({required Color? cursorColor});
+  String buildString({required final Color? cursorColor});
 }
 
 /// Class describing the cursor as a TeX expression.
@@ -206,7 +206,7 @@ class Cursor extends TeX {
   const Cursor() : super('');
 
   @override
-  String buildString({required Color? cursorColor}) {
+  String buildString({required final Color? cursorColor}) {
     if (cursorColor == null) {
       throw FlutterError('Cursor.buildString() called without a cursorColor.');
     }

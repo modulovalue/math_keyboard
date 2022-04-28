@@ -1,14 +1,16 @@
+// ignore_for_file: comment_references
+
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_math_fork/flutter_math.dart';
 import 'package:math_expressions/math_expressions.dart';
-import 'package:math_keyboard/src/foundation/keyboard_button.dart';
-import 'package:math_keyboard/src/foundation/math2tex.dart';
-import 'package:math_keyboard/src/foundation/node.dart';
-import 'package:math_keyboard/src/widgets/decimal_separator.dart';
-import 'package:math_keyboard/src/widgets/math_keyboard.dart';
-import 'package:math_keyboard/src/widgets/view_insets.dart';
+import '../foundation/keyboard_button.dart';
+import '../foundation/math2tex.dart';
+import '../foundation/node.dart';
+import 'decimal_separator.dart';
+import 'math_keyboard.dart';
+import 'view_insets.dart';
 
 /// Widget that is like a [TextField] for math expressions.
 ///
@@ -17,7 +19,7 @@ import 'package:math_keyboard/src/widgets/view_insets.dart';
 class MathField extends StatefulWidget {
   /// Constructs a [MathField] widget.
   const MathField({
-    Key? key,
+    final Key? key,
     this.autofocus = false,
     this.focusNode,
     this.controller,
@@ -145,7 +147,7 @@ class _MathFieldState extends State<MathField> with TickerProviderStateMixin {
   void initState() {
     super.initState();
 
-    _keyboardSlideController.addStatusListener((status) {
+    _keyboardSlideController.addStatusListener((final status) {
       if (status == AnimationStatus.dismissed) {
         _overlayEntry?.remove();
         _overlayEntry = null;
@@ -158,7 +160,7 @@ class _MathFieldState extends State<MathField> with TickerProviderStateMixin {
   }
 
   @override
-  void didUpdateWidget(MathField oldWidget) {
+  void didUpdateWidget(final MathField oldWidget) {
     super.didUpdateWidget(oldWidget);
 
     if (oldWidget.controller != widget.controller) {
@@ -176,13 +178,13 @@ class _MathFieldState extends State<MathField> with TickerProviderStateMixin {
 
     if (oldWidget.focusNode != widget.focusNode) {
       if (oldWidget.focusNode == null) {
-        assert(widget.focusNode != null);
+        assert(widget.focusNode != null, "");
         // Dispose the focus node created by our state instance.
         _focusNode.dispose();
         // Assign the new outside focus node.
         _focusNode = widget.focusNode!;
       } else if (widget.focusNode == null) {
-        assert(oldWidget.focusNode != null);
+        assert(oldWidget.focusNode != null, "");
         // Instantiate new local focus node.
         _focusNode = FocusNode(
           debugLabel: 'math_keyboard_$hashCode',
@@ -242,7 +244,7 @@ class _MathFieldState extends State<MathField> with TickerProviderStateMixin {
     // We want to automatically scroll the math field to the right when the
     // cursor is all the way to the right.
     if (_controller.root.cursorAtTheEnd()) {
-      SchedulerBinding.instance!.addPostFrameCallback((_) {
+      SchedulerBinding.instance!.addPostFrameCallback((final _) {
         _scrollController.animateTo(
           _scrollController.position.maxScrollExtent,
           duration: const Duration(milliseconds: 100),
@@ -263,7 +265,7 @@ class _MathFieldState extends State<MathField> with TickerProviderStateMixin {
   /// the math keyboard should be opened and when it should be closed.
   ///
   /// When [open] is true, the keyboard should be opened and vice versa.
-  void _handleFocusChanged(BuildContext context, {required bool open}) {
+  void _handleFocusChanged(final BuildContext context, {required final bool open}) {
     if (!open) {
       _keyboardSlideController.reverse();
       _cursorBlinkController.value = 1 / 2;
@@ -288,7 +290,7 @@ class _MathFieldState extends State<MathField> with TickerProviderStateMixin {
       return;
     }
     _showFieldOnScreenScheduled = true;
-    WidgetsBinding.instance!.addPostFrameCallback((Duration _) {
+    WidgetsBinding.instance!.addPostFrameCallback((final Duration _) {
       _showFieldOnScreenScheduled = false;
       if (!mounted) return;
 
@@ -299,10 +301,10 @@ class _MathFieldState extends State<MathField> with TickerProviderStateMixin {
     });
   }
 
-  void _openKeyboard(BuildContext context) {
+  void _openKeyboard(final BuildContext context) {
     _overlayEntry?.remove();
     _overlayEntry = OverlayEntry(
-      builder: (context) {
+      builder: (final context) {
         return Localizations.override(
           // Make sure to inject the same locale the math field uses in order
           // to match the decimal separators.
@@ -330,7 +332,7 @@ class _MathFieldState extends State<MathField> with TickerProviderStateMixin {
     widget.onSubmitted?.call(_controller.currentEditingValue());
   }
 
-  KeyEventResult _handleKey(FocusNode node, RawKeyEvent keyEvent) {
+  KeyEventResult _handleKey(final FocusNode node, final RawKeyEvent keyEvent) {
     if (keyEvent is! RawKeyDownEvent) {
       // We do not want to handle key up events in order to prevent double
       // detection of logical key events (pressing backspace would be triggered
@@ -348,7 +350,7 @@ class _MathFieldState extends State<MathField> with TickerProviderStateMixin {
       ] else if (widget.keyboardType == MathKeyboardType.numberOnly) ...[
         ...numberKeyboard,
       ],
-    ].fold<List<KeyboardButtonConfig>>([], (previousValue, element) {
+    ].fold<List<KeyboardButtonConfig>>([], (final previousValue, final element) {
       return previousValue..addAll(element);
     });
 
@@ -369,7 +371,7 @@ class _MathFieldState extends State<MathField> with TickerProviderStateMixin {
   /// Returns `null` if not handled (indecisive) and a [KeyEventResult] if we
   /// can conclude about the complete key handling from the action taken.
   KeyEventResult? _handleCharacter(
-      String? character, List<KeyboardButtonConfig> configs) {
+      final String? character, final List<KeyboardButtonConfig> configs) {
     if (character == null) return null;
     final lowerCaseCharacter = character.toLowerCase();
 
@@ -379,7 +381,7 @@ class _MathFieldState extends State<MathField> with TickerProviderStateMixin {
       if (config.keyboardCharacters.isEmpty) continue;
 
       if (config.keyboardCharacters
-          .any((element) => element.toLowerCase() == lowerCaseCharacter)) {
+          .any((final element) => element.toLowerCase() == lowerCaseCharacter)) {
         final basicConfig = config;
         if (basicConfig.args != null) {
           _controller.addFunction(basicConfig.value, basicConfig.args!);
@@ -422,28 +424,28 @@ class _MathFieldState extends State<MathField> with TickerProviderStateMixin {
   /// Returns `null` if not handled (indecisive) and a [KeyEventResult] if we
   /// can conclude about the complete key handling from the action taken.
   KeyEventResult? _handleLogicalKey(
-      LogicalKeyboardKey logicalKey, List<KeyboardButtonConfig> configs) {
+      final LogicalKeyboardKey logicalKey, final List<KeyboardButtonConfig> configs) {
     // Check logical, fixed keyboard bindings (like backspace and arrow keys).
     if (logicalKey == LogicalKeyboardKey.backspace &&
-        configs.any((element) => element is DeleteButtonConfig)) {
+        configs.any((final element) => element is DeleteButtonConfig)) {
       _controller.goBack(deleteMode: true);
       return KeyEventResult.handled;
     }
     if ((logicalKey == LogicalKeyboardKey.arrowRight ||
             logicalKey == LogicalKeyboardKey.arrowDown) &&
-        configs.any((element) => element is NextButtonConfig)) {
+        configs.any((final element) => element is NextButtonConfig)) {
       _controller.goNext();
       return KeyEventResult.handled;
     }
     if ((logicalKey == LogicalKeyboardKey.arrowLeft ||
             logicalKey == LogicalKeyboardKey.arrowUp) &&
-        configs.any((element) => element is PreviousButtonConfig)) {
+        configs.any((final element) => element is PreviousButtonConfig)) {
       _controller.goBack();
       return KeyEventResult.handled;
     }
     if ((logicalKey == LogicalKeyboardKey.enter ||
             logicalKey == LogicalKeyboardKey.numpadEnter) &&
-        configs.any((element) => element is SubmitButtonConfig)) {
+        configs.any((final element) => element is SubmitButtonConfig)) {
       _submit();
       return KeyEventResult.handled;
     }
@@ -452,7 +454,7 @@ class _MathFieldState extends State<MathField> with TickerProviderStateMixin {
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(final BuildContext context) {
     return MouseRegion(
       cursor: MaterialStateMouseCursor.textable,
       child: Focus(
@@ -462,13 +464,13 @@ class _MathFieldState extends State<MathField> with TickerProviderStateMixin {
         // software keyboard from showing when a key on the physical keyboard
         // is pressed. See https://github.com/flutter/flutter/issues/44681.
         // todo: fix the problem once we have an update on flutter/flutter#44681.
-        onFocusChange: (primary) => _handleFocusChanged(context, open: primary),
+        onFocusChange: (final primary) => _handleFocusChanged(context, open: primary),
         onKey: _handleKey,
         child: GestureDetector(
           onTap: _focusNode.requestFocus,
           child: AnimatedBuilder(
             animation: _controller,
-            builder: (context, child) {
+            builder: (final context, final child) {
               return _FieldPreview(
                 controller: _controller,
                 scrollController: _scrollController,
@@ -489,12 +491,12 @@ class _MathFieldState extends State<MathField> with TickerProviderStateMixin {
 class _FieldPreview extends StatelessWidget {
   /// Constructs a [_FieldPreview].
   const _FieldPreview({
-    Key? key,
-    required this.controller,
-    required this.cursorOpacity,
-    required this.hasFocus,
-    required this.decoration,
-    required this.scrollController,
+    required final this.controller,
+    required final this.cursorOpacity,
+    required final this.hasFocus,
+    required final this.decoration,
+    required final this.scrollController,
+    final Key? key,
   }) : super(key: key);
 
   /// The controller for the math field.
@@ -514,7 +516,7 @@ class _FieldPreview extends StatelessWidget {
   final InputDecoration decoration;
 
   // Adapted from InputDecorator._getFillColor.
-  Color _getDisabledCursorColor(ThemeData themeData) {
+  Color _getDisabledCursorColor(final ThemeData themeData) {
     if (!(decoration.filled ?? false)) {
       return themeData.colorScheme.surface;
     }
@@ -544,7 +546,7 @@ class _FieldPreview extends StatelessWidget {
   }
 
   // Adapted from InputDecorator._getInlineStyle.
-  TextStyle _getHintStyle(ThemeData themeData) {
+  TextStyle _getHintStyle(final ThemeData themeData) {
     return themeData.textTheme.subtitle1!
         .copyWith(
             color: decoration.enabled
@@ -554,7 +556,7 @@ class _FieldPreview extends StatelessWidget {
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(final BuildContext context) {
     final tex = controller.root
         .buildTeXString(
           cursorColor: Color.lerp(
@@ -599,7 +601,7 @@ class _FieldPreview extends StatelessWidget {
                     // This is a workaround for aligning the cursor properly
                     // when the math field is empty. This way it matches the
                     // TextField behavior.
-                    : Offset(-1, 0),
+                    : const Offset(-1, 0),
                 child: Math.tex(
                   tex,
                   options: MathOptions(
@@ -656,10 +658,10 @@ class MathFieldEditingController extends ChangeNotifier {
   }
 
   /// Clears the current value and sets it to the [expression] equivalent.
-  void updateValue(Expression expression) {
+  void updateValue(final Expression expression) {
     try {
       root = convertMathExpressionToTeXNode(expression);
-    } catch (e) {
+    } on Object catch (e) {
       throw Exception('Unsupported input expression $expression ($e)');
     }
     currentNode = root;
@@ -669,9 +671,8 @@ class MathFieldEditingController extends ChangeNotifier {
   }
 
   /// Navigate to the previous node.
-  void goBack({bool deleteMode = false}) {
-    final state =
-        deleteMode ? currentNode.remove() : currentNode.shiftCursorLeft();
+  void goBack({final bool deleteMode = false}) {
+    final state = deleteMode ? currentNode.remove() : currentNode.shiftCursorLeft();
     switch (state) {
       // CASE 1: Courser was moved 1 position to the left in the current node.
       case NavigationState.success:
@@ -760,13 +761,13 @@ class MathFieldEditingController extends ChangeNotifier {
   }
 
   /// Add leaf to the current node.
-  void addLeaf(String tex) {
+  void addLeaf(final String tex) {
     currentNode.addTeX(TeXLeaf(tex));
     notifyListeners();
   }
 
   /// Add function to the current node.
-  void addFunction(String tex, List<TeXArg> args) {
+  void addFunction(final String tex, final List<TeXArg> args) {
     currentNode.removeCursor();
     final func = TeXFunction(tex, currentNode, args);
 
@@ -790,7 +791,7 @@ class MathFieldEditingController extends ChangeNotifier {
   ///
   /// If the expression is ^2 instead of ^, we want to set 2 as the argument
   /// of the pow function directly.
-  void addPow(TeXFunction pow) {
+  void addPow(final TeXFunction pow) {
     final posBefore = currentNode.courserPosition - 1;
 
     /// We don't allow having to pow's next to each other (x^2^2), since this
@@ -816,7 +817,7 @@ class MathFieldEditingController extends ChangeNotifier {
   ///
   /// There are two options: Either we divide the previous term, or we add an
   /// empty frac.
-  void addFrac(TeXFunction frac) {
+  void addFrac(final TeXFunction frac) {
     // We first want to divide the list with children at the current courser
     // position. This way, we can always look at the last element in the list,
     // when taking the numerator, and don't need to keep track of the index.
@@ -861,7 +862,7 @@ class MathFieldEditingController extends ChangeNotifier {
 
   /// Takes a numerator off the current node and inserts it in a frac's first
   /// argument.
-  void _takeNumerator(TeXFunction frac) {
+  void _takeNumerator(final TeXFunction frac) {
     // We remove the last TeX-object from the current node and insert it in the
     // frac's first argument.
     var lastTeX = currentNode.children.removeLast();
@@ -948,13 +949,13 @@ class MathFieldEditingController extends ChangeNotifier {
 
   @override
   void dispose() {
-    assert(!_disposed);
+    assert(!_disposed, "");
     _disposed = true;
     super.dispose();
   }
 
   @override
-  void removeListener(VoidCallback listener) {
+  void removeListener(final VoidCallback listener) {
     // Workaround for the fact that the AnimatedBuilder's in the math keyboard
     // overlay might be disposed after the math field is disposed.
     if (_disposed) return;

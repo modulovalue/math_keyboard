@@ -6,10 +6,10 @@ class LinkButton extends StatelessWidget {
   /// Constructs a [LinkButton] from a [label], a [url], and an optional
   /// [child].
   const LinkButton({
-    Key? key,
-    required this.label,
-    required this.url,
-    this.child,
+    required final this.label,
+    required final this.url,
+    final Key? key,
+    final this.child,
   }) : super(key: key);
 
   /// Label for the button.
@@ -24,11 +24,11 @@ class LinkButton extends StatelessWidget {
   final Widget? child;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(final BuildContext context) {
     void onPressed() => launch(url);
     final style = OutlinedButton.styleFrom(
       padding: const EdgeInsets.all(16),
-      textStyle: TextStyle(
+      textStyle: const TextStyle(
         fontSize: 20,
         decoration: TextDecoration.underline,
       ),

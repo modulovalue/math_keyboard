@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:math_keyboard/src/widgets/math_field.dart';
-import 'package:math_keyboard/src/widgets/math_keyboard.dart';
+import 'math_field.dart';
+import 'math_keyboard.dart';
 
 /// A [FormField] that contains a [MathField].
 ///
@@ -21,27 +21,27 @@ import 'package:math_keyboard/src/widgets/math_keyboard.dart';
 class MathFormField extends FormField<String> {
   /// Creates a [FormField] that contains a [MathField].
   MathFormField({
-    Key? key,
-    this.controller,
-    FocusNode? focusNode,
-    InputDecoration decoration = const InputDecoration(),
-    MathKeyboardType keyboardType = MathKeyboardType.expression,
-    List<String> variables = const [],
-    bool autofocus = false,
-    ValueChanged<String>? onChanged,
-    ValueChanged<String>? onFieldSubmitted,
-    AutovalidateMode autovalidateMode = AutovalidateMode.disabled,
-    FormFieldValidator<String>? validator,
+    final Key? key,
+    final this.controller,
+    final FocusNode? focusNode,
+    final InputDecoration decoration = const InputDecoration(),
+    final MathKeyboardType keyboardType = MathKeyboardType.expression,
+    final List<String> variables = const [],
+    final bool autofocus = false,
+    final ValueChanged<String>? onChanged,
+    final ValueChanged<String>? onFieldSubmitted,
+    final AutovalidateMode autovalidateMode = AutovalidateMode.disabled,
+    final FormFieldValidator<String>? validator,
   }) : super(
           key: key,
           initialValue:
               controller != null ? controller.currentEditingValue() : '',
           validator: validator,
           autovalidateMode: autovalidateMode,
-          builder: (FormFieldState<String> field) {
+          builder: (final FormFieldState<String> field) {
             final state = field as _MathFormFieldState;
 
-            void onChangedHandler(String value) {
+            void onChangedHandler(final String value) {
               field.didChange(value);
               if (onChanged != null) {
                 onChanged(value);
@@ -89,7 +89,7 @@ class _MathFormFieldState extends FormFieldState<String> {
   }
 
   @override
-  void didUpdateWidget(MathFormField oldWidget) {
+  void didUpdateWidget(final MathFormField oldWidget) {
     super.didUpdateWidget(oldWidget);
     if (widget.controller != oldWidget.controller) {
       if (oldWidget.controller == null) {
@@ -114,7 +114,7 @@ class _MathFormFieldState extends FormFieldState<String> {
   }
 
   @override
-  void didChange(String? value) {
+  void didChange(final String? value) {
     super.didChange(value);
 
     // todo: allow changing the value from outside of the controller.

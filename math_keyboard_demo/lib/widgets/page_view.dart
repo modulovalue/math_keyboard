@@ -6,7 +6,7 @@ import 'package:math_keyboard/math_keyboard.dart';
 /// Page view for presenting the features that math_keyboard has to offer.
 class DemoPageView extends StatefulWidget {
   /// Creates a [DemoPageView] widget.
-  const DemoPageView({Key? key}) : super(key: key);
+  const DemoPageView({final Key? key}) : super(key: key);
 
   @override
   _DemoPageViewState createState() => _DemoPageViewState();
@@ -40,8 +40,8 @@ class _DemoPageViewState extends State<DemoPageView> {
   void _handleScroll() {
     if (previousIndex == _page) return;
 
-    // Unfocus all keyboards when navigating between the pages.
-    // Otherwise, the behavior is really weird becauase page views always
+    // Remove focus from all keyboards when navigating between the pages.
+    // Otherwise, the behavior is really weird because page views always
     // keep the pages to the left and right alive.
     FocusScope.of(context).unfocus();
 
@@ -51,7 +51,7 @@ class _DemoPageViewState extends State<DemoPageView> {
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(final BuildContext context) {
     final pages = [
       const _Page(child: _PrimaryPage()),
       const _Page(child: _InputDecorationPage()),
@@ -93,9 +93,9 @@ class _DemoPageViewState extends State<DemoPageView> {
                         curve: Curves.ease,
                       );
                     },
-                    child: Padding(
-                      padding: const EdgeInsets.all(16),
-                      child: const Icon(Icons.chevron_left_outlined),
+                    child: const Padding(
+                      padding: EdgeInsets.all(16),
+                      child: Icon(Icons.chevron_left_outlined),
                     ),
                   ),
                 ),
@@ -114,9 +114,9 @@ class _DemoPageViewState extends State<DemoPageView> {
                         curve: Curves.ease,
                       );
                     },
-                    child: Padding(
-                      padding: const EdgeInsets.all(16),
-                      child: const Icon(Icons.chevron_right_outlined),
+                    child: const Padding(
+                      padding: EdgeInsets.all(16),
+                      child: Icon(Icons.chevron_right_outlined),
                     ),
                   ),
                 ),
@@ -126,7 +126,7 @@ class _DemoPageViewState extends State<DemoPageView> {
         ),
         AnimatedBuilder(
           animation: _controller,
-          builder: (context, child) {
+          builder: (final context, final child) {
             return Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
@@ -150,16 +150,16 @@ class _DemoPageViewState extends State<DemoPageView> {
 
 class _Page extends StatelessWidget {
   const _Page({
-    Key? key,
     required this.child,
+    final Key? key,
   }) : super(key: key);
 
   final Widget child;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(final BuildContext context) {
     return Padding(
-      padding: EdgeInsets.symmetric(
+      padding: const EdgeInsets.symmetric(
         vertical: 16,
         horizontal: 56,
       ),
@@ -174,9 +174,9 @@ class _Page extends StatelessWidget {
 class _PageIndicator extends StatelessWidget {
   /// Constructs a [_PageIndicator] widget.
   const _PageIndicator({
-    Key? key,
-    required this.selected,
-    required this.onTap,
+    required final this.selected,
+    required final this.onTap,
+    final Key? key,
   }) : super(key: key);
 
   final bool selected;
@@ -184,7 +184,7 @@ class _PageIndicator extends StatelessWidget {
   final VoidCallback onTap;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(final BuildContext context) {
     final size = Size.fromRadius(selected ? 6.5 : 5);
 
     return MouseRegion(
@@ -202,10 +202,7 @@ class _PageIndicator extends StatelessWidget {
                 width: size.width,
                 height: size.height,
                 decoration: BoxDecoration(
-                  color: Theme.of(context)
-                      .colorScheme
-                      .onSurface
-                      .withOpacity(selected ? 1 : 1 / 2),
+                  color: Theme.of(context).colorScheme.onSurface.withOpacity(selected ? 1 : 1 / 2),
                   shape: BoxShape.circle,
                 ),
               ),
@@ -218,7 +215,7 @@ class _PageIndicator extends StatelessWidget {
 }
 
 class _PrimaryPage extends StatefulWidget {
-  const _PrimaryPage({Key? key}) : super(key: key);
+  const _PrimaryPage({final Key? key}) : super(key: key);
 
   @override
   _PrimaryPageState createState() => _PrimaryPageState();
@@ -227,8 +224,7 @@ class _PrimaryPage extends StatefulWidget {
 class _PrimaryPageState extends State<_PrimaryPage> {
   late final _expressionController = MathFieldEditingController()
     ..updateValue(Parser().parse('4.2 - (cos(x)/(x^3 - sin(x))) + e^(4^2)'));
-  late final _numberController = MathFieldEditingController()
-    ..updateValue(Parser().parse('42'));
+  late final _numberController = MathFieldEditingController()..updateValue(Parser().parse('42'));
 
   @override
   void dispose() {
@@ -238,7 +234,7 @@ class _PrimaryPageState extends State<_PrimaryPage> {
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(final BuildContext context) {
     return Column(
       children: [
         Padding(
@@ -253,8 +249,8 @@ class _PrimaryPageState extends State<_PrimaryPage> {
             textAlign: TextAlign.center,
           ),
         ),
-        Padding(
-          padding: const EdgeInsets.all(32),
+        const Padding(
+          padding: EdgeInsets.all(32),
           child: SizedBox(
             width: 5e2,
             child: Text(
@@ -269,7 +265,7 @@ class _PrimaryPageState extends State<_PrimaryPage> {
           width: 420,
           child: MathField(
             controller: _expressionController,
-            decoration: InputDecoration(
+            decoration: const InputDecoration(
               labelText: 'Expression math field',
               filled: true,
               border: OutlineInputBorder(),
@@ -285,7 +281,7 @@ class _PrimaryPageState extends State<_PrimaryPage> {
             child: MathField(
               controller: _numberController,
               keyboardType: MathKeyboardType.numberOnly,
-              decoration: InputDecoration(
+              decoration: const InputDecoration(
                 labelText: 'Number-only math field',
                 filled: true,
                 border: OutlineInputBorder(),
@@ -299,10 +295,14 @@ class _PrimaryPageState extends State<_PrimaryPage> {
 }
 
 class _InputDecorationPage extends StatelessWidget {
-  const _InputDecorationPage({Key? key}) : super(key: key);
+  const _InputDecorationPage({
+    final Key? key,
+  }) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(
+    final BuildContext context,
+  ) {
     return Column(
       children: [
         Padding(
@@ -317,8 +317,8 @@ class _InputDecorationPage extends StatelessWidget {
             textAlign: TextAlign.center,
           ),
         ),
-        Padding(
-          padding: const EdgeInsets.all(32),
+        const Padding(
+          padding: EdgeInsets.all(32),
           child: SizedBox(
             width: 5e2,
             child: Text(
@@ -329,7 +329,7 @@ class _InputDecorationPage extends StatelessWidget {
             ),
           ),
         ),
-        SizedBox(
+        const SizedBox(
           width: 420,
           child: TextField(
             decoration: InputDecoration(
@@ -339,8 +339,8 @@ class _InputDecorationPage extends StatelessWidget {
             ),
           ),
         ),
-        Padding(
-          padding: const EdgeInsets.only(
+        const Padding(
+          padding: EdgeInsets.only(
             top: 16,
           ),
           child: SizedBox(
@@ -360,7 +360,7 @@ class _InputDecorationPage extends StatelessWidget {
             width: 6e2,
             child: Row(
               children: [
-                Expanded(
+                const Expanded(
                   child: MathField(
                     variables: ['a', 'b', 'd', 'g', 'h_2', 'x', 'y', 'z'],
                     decoration: InputDecoration(
@@ -371,13 +371,13 @@ class _InputDecorationPage extends StatelessWidget {
                 const SizedBox(
                   width: 12,
                 ),
-                Expanded(
+                const Expanded(
                   child: MathField(
                     keyboardType: MathKeyboardType.numberOnly,
                     decoration: InputDecoration(
                       helperText: 'This math field has some icons.',
-                      prefixIcon: const Icon(Icons.keyboard_outlined),
-                      suffixIcon: const Icon(Icons.format_shapes_sharp),
+                      prefixIcon: Icon(Icons.keyboard_outlined),
+                      suffixIcon: Icon(Icons.format_shapes_sharp),
                     ),
                   ),
                 )
@@ -391,7 +391,9 @@ class _InputDecorationPage extends StatelessWidget {
 }
 
 class _ControllerPage extends StatefulWidget {
-  const _ControllerPage({Key? key}) : super(key: key);
+  const _ControllerPage({
+    final Key? key,
+  }) : super(key: key);
 
   @override
   _ControllerPageState createState() => _ControllerPageState();
@@ -401,8 +403,7 @@ class _ControllerPageState extends State<_ControllerPage> {
   late final _clipboardController = MathFieldEditingController()
     ..updateValue(Parser().parse('log(2, x) - log(5, 2) / 24'));
   late final _clearAllController = MathFieldEditingController();
-  late final _magicController = MathFieldEditingController()
-    ..updateValue(Parser().parse('42'));
+  late final _magicController = MathFieldEditingController()..updateValue(Parser().parse('42'));
 
   @override
   void dispose() {
@@ -413,7 +414,7 @@ class _ControllerPageState extends State<_ControllerPage> {
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(final BuildContext context) {
     return Column(
       children: [
         Padding(
@@ -428,8 +429,8 @@ class _ControllerPageState extends State<_ControllerPage> {
             textAlign: TextAlign.center,
           ),
         ),
-        Padding(
-          padding: const EdgeInsets.all(32),
+        const Padding(
+          padding: EdgeInsets.all(32),
           child: SizedBox(
             width: 5e2,
             child: Text(
@@ -447,7 +448,7 @@ class _ControllerPageState extends State<_ControllerPage> {
               width: 3e2,
               child: MathField(
                 controller: _clipboardController,
-                decoration: InputDecoration(
+                decoration: const InputDecoration(
                   filled: true,
                   border: OutlineInputBorder(),
                 ),
@@ -461,19 +462,21 @@ class _ControllerPageState extends State<_ControllerPage> {
                 message: 'If the on-screen keyboard is opened, the snack bar '
                     'will appear above the keyboard (view insets feature).',
                 child: OutlinedButton.icon(
-                  onPressed: () async {
-                    await Clipboard.setData(ClipboardData(
-                      text: _clipboardController.currentEditingValue(),
-                    ));
+                  onPressed: () {
+                    Clipboard.setData(
+                      ClipboardData(
+                        text: _clipboardController.currentEditingValue(),
+                      ),
+                    );
                     ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                       content: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
-                        children: [Text('Copied TeX string to clipboard :)')],
+                        children: [const Text('Copied TeX string to clipboard :)')],
                       ),
                     ));
                   },
                   icon: const Icon(Icons.copy_outlined),
-                  label: Text('Copy to clipboard'),
+                  label: const Text('Copy to clipboard'),
                 ),
               ),
             ),
@@ -511,11 +514,10 @@ class _ControllerPageState extends State<_ControllerPage> {
                   left: 16,
                 ),
                 child: Tooltip(
-                  message:
-                      'Works from anywhere - thanks to the controller pattern.',
+                  message: 'Works from anywhere - thanks to the controller pattern.',
                   child: OutlinedButton(
                     onPressed: _clearAllController.clear,
-                    child: Text('Clear all'),
+                    child: const Text('Clear all'),
                   ),
                 ),
               ),
@@ -534,7 +536,7 @@ class _ControllerPageState extends State<_ControllerPage> {
                 child: MathField(
                   keyboardType: MathKeyboardType.numberOnly,
                   controller: _magicController,
-                  decoration: InputDecoration(
+                  decoration: const InputDecoration(
                     labelText: 'Magic field',
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.all(Radius.circular(8)),
@@ -552,7 +554,7 @@ class _ControllerPageState extends State<_ControllerPage> {
                     _magicController.addLeaf('4');
                     _magicController.addLeaf('2');
                   },
-                  child: Text('Add 42'),
+                  child: const Text('Add 42'),
                 ),
               ),
             ],
@@ -565,14 +567,14 @@ class _ControllerPageState extends State<_ControllerPage> {
 
 class _AutofocusPage extends StatelessWidget {
   const _AutofocusPage({
-    Key? key,
-    required this.autofocus,
+    required final this.autofocus,
+    final Key? key,
   }) : super(key: key);
 
   final bool autofocus;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(final BuildContext context) {
     return Column(
       children: [
         Padding(
@@ -587,8 +589,8 @@ class _AutofocusPage extends StatelessWidget {
             textAlign: TextAlign.center,
           ),
         ),
-        Padding(
-          padding: const EdgeInsets.all(32),
+        const Padding(
+          padding: EdgeInsets.all(32),
           child: SizedBox(
             width: 5e2,
             child: Text(
@@ -602,7 +604,7 @@ class _AutofocusPage extends StatelessWidget {
           width: 420,
           child: MathField(
             autofocus: autofocus,
-            decoration: InputDecoration(
+            decoration: const InputDecoration(
               hintText: 'Autofocus math field',
               filled: true,
               border: OutlineInputBorder(),
@@ -615,7 +617,9 @@ class _AutofocusPage extends StatelessWidget {
 }
 
 class _FocusTreePage extends StatefulWidget {
-  const _FocusTreePage({Key? key}) : super(key: key);
+  const _FocusTreePage({
+    final Key? key,
+  }) : super(key: key);
 
   @override
   _FocusTreePageState createState() => _FocusTreePageState();
@@ -637,7 +641,7 @@ class _FocusTreePageState extends State<_FocusTreePage> {
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(final BuildContext context) {
     return Column(
       children: [
         Padding(
@@ -652,8 +656,8 @@ class _FocusTreePageState extends State<_FocusTreePage> {
             textAlign: TextAlign.center,
           ),
         ),
-        Padding(
-          padding: const EdgeInsets.all(32),
+        const Padding(
+          padding: EdgeInsets.all(32),
           child: SizedBox(
             width: 5e2,
             child: Text(
@@ -675,7 +679,7 @@ class _FocusTreePageState extends State<_FocusTreePage> {
                     MathField(
                       focusNode: _focusNodeOne,
                       variables: ['o', 'n', 'e'],
-                      decoration: InputDecoration(
+                      decoration: const InputDecoration(
                         labelText: 'One',
                         filled: true,
                         border: OutlineInputBorder(),
@@ -688,7 +692,7 @@ class _FocusTreePageState extends State<_FocusTreePage> {
                       child: MathField(
                         focusNode: _focusNodeTwo,
                         variables: ['t', 'w', 'o'],
-                        decoration: InputDecoration(
+                        decoration: const InputDecoration(
                           labelText: 'Two',
                           filled: true,
                           border: OutlineInputBorder(),
@@ -702,7 +706,7 @@ class _FocusTreePageState extends State<_FocusTreePage> {
                       child: MathField(
                         focusNode: _focusNodeThree,
                         variables: ['t', 'h', 'r', 'e'],
-                        decoration: InputDecoration(
+                        decoration: const InputDecoration(
                           labelText: 'Three',
                           filled: true,
                           border: OutlineInputBorder(),
@@ -716,7 +720,7 @@ class _FocusTreePageState extends State<_FocusTreePage> {
                       child: MathField(
                         focusNode: _focusNodeFour,
                         variables: ['f', 'o', 'u', 'r'],
-                        decoration: InputDecoration(
+                        decoration: const InputDecoration(
                           labelText: 'Four',
                           filled: true,
                           border: OutlineInputBorder(),
@@ -762,15 +766,16 @@ class _FocusTreePageState extends State<_FocusTreePage> {
 }
 
 class _DecimalSeparatorPage extends StatefulWidget {
-  const _DecimalSeparatorPage({Key? key}) : super(key: key);
+  const _DecimalSeparatorPage({
+    final Key? key,
+  }) : super(key: key);
 
   @override
   _DecimalSeparatorPageState createState() => _DecimalSeparatorPageState();
 }
 
 class _DecimalSeparatorPageState extends State<_DecimalSeparatorPage> {
-  late final _controller = MathFieldEditingController()
-    ..updateValue(Parser().parse('4.2'));
+  late final _controller = MathFieldEditingController()..updateValue(Parser().parse('4.2'));
 
   @override
   void dispose() {
@@ -779,7 +784,7 @@ class _DecimalSeparatorPageState extends State<_DecimalSeparatorPage> {
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(final BuildContext context) {
     return Column(
       children: [
         Padding(
@@ -794,8 +799,8 @@ class _DecimalSeparatorPageState extends State<_DecimalSeparatorPage> {
             textAlign: TextAlign.center,
           ),
         ),
-        Padding(
-          padding: const EdgeInsets.all(32),
+        const Padding(
+          padding: EdgeInsets.all(32),
           child: SizedBox(
             width: 5e2,
             child: Text(
@@ -810,11 +815,11 @@ class _DecimalSeparatorPageState extends State<_DecimalSeparatorPage> {
           width: 420,
           child: Localizations.override(
             context: context,
-            locale: Locale('en', 'US'),
+            locale: const Locale('en', 'US'),
             child: MathField(
               controller: _controller,
               keyboardType: MathKeyboardType.numberOnly,
-              decoration: InputDecoration(
+              decoration: const InputDecoration(
                 labelText: 'English locale',
                 filled: true,
                 border: OutlineInputBorder(),
@@ -831,11 +836,11 @@ class _DecimalSeparatorPageState extends State<_DecimalSeparatorPage> {
             width: 420,
             child: Localizations.override(
               context: context,
-              locale: Locale('de', 'DE'),
+              locale: const Locale('de', 'DE'),
               child: MathField(
                 controller: _controller,
                 keyboardType: MathKeyboardType.numberOnly,
-                decoration: InputDecoration(
+                decoration: const InputDecoration(
                   labelText: 'German locale',
                   filled: true,
                   border: OutlineInputBorder(),
@@ -851,7 +856,7 @@ class _DecimalSeparatorPageState extends State<_DecimalSeparatorPage> {
 }
 
 class _MathExpressionsPage extends StatefulWidget {
-  const _MathExpressionsPage({Key? key}) : super(key: key);
+  const _MathExpressionsPage({final Key? key}) : super(key: key);
 
   @override
   _MathExpressionsPageState createState() => _MathExpressionsPageState();
@@ -863,10 +868,8 @@ class _MathExpressionsPageState extends State<_MathExpressionsPage> {
   double _value = 4;
   double? _result;
 
-  late final _expressionController = MathFieldEditingController()
-    ..updateValue(_expression);
-  late final _valueController = MathFieldEditingController()
-    ..updateValue(Parser().parse('$_value'));
+  late final _expressionController = MathFieldEditingController()..updateValue(_expression);
+  late final _valueController = MathFieldEditingController()..updateValue(Parser().parse('$_value'));
 
   @override
   void initState() {
@@ -884,14 +887,21 @@ class _MathExpressionsPageState extends State<_MathExpressionsPage> {
   void _calculateResult() {
     try {
       setState(() {
-        _result = _expression.evaluate(EvaluationType.REAL,
-            ContextModel()..bindVariableName('x', Number(_value)));
+        _result = _expression.evaluate(
+          EvaluationType.REAL,
+          ContextModel()
+            ..bindVariableName(
+              'x',
+              Number(_value),
+            ),
+        ) as double?;
       });
-    } catch (_) {}
+      // TODO(modulovalue) very very bad.
+    } on Object catch (_) {}
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(final BuildContext context) {
     return Column(
       children: [
         Padding(
@@ -906,8 +916,8 @@ class _MathExpressionsPageState extends State<_MathExpressionsPage> {
             textAlign: TextAlign.center,
           ),
         ),
-        Padding(
-          padding: const EdgeInsets.all(32),
+        const Padding(
+          padding: EdgeInsets.all(32),
           child: SizedBox(
             width: 5e2,
             child: Text(
@@ -921,21 +931,20 @@ class _MathExpressionsPageState extends State<_MathExpressionsPage> {
           width: 420,
           child: Localizations.override(
             context: context,
-            locale: Locale('en', 'US'),
+            locale: const Locale('en', 'US'),
             child: MathField(
               controller: _expressionController,
-              onChanged: (tex) {
+              onChanged: (final tex) {
                 try {
                   _expression = TeXParser(tex).parse();
                   _calculateResult();
-                } catch (_) {}
-
+                } on Object catch (_) {}
                 setState(() {
                   _tex = tex;
                 });
               },
               variables: ['x'],
-              decoration: InputDecoration(
+              decoration: const InputDecoration(
                 labelText: 'Expression field',
                 filled: true,
                 border: OutlineInputBorder(),
@@ -979,27 +988,26 @@ class _MathExpressionsPageState extends State<_MathExpressionsPage> {
                 child: MathField(
                   controller: _valueController,
                   keyboardType: MathKeyboardType.numberOnly,
-                  onChanged: (value) {
+                  onChanged: (final value) {
                     try {
-                      _value = TeXParser(value)
-                          .parse()
-                          .evaluate(EvaluationType.REAL, ContextModel());
+                      _value = (TeXParser(value).parse().evaluate(EvaluationType.REAL, ContextModel())
+                          as double?)!;
                       _calculateResult();
-                    } catch (_) {}
+                      // TODO(modulovalue) very very bad
+                    } on Object catch (_) {}
                   },
-                  decoration: InputDecoration(
+                  decoration: const InputDecoration(
                     labelText: 'Value for x',
                     filled: true,
                     border: OutlineInputBorder(),
                   ),
                 ),
               ),
-              Padding(
-                padding: const EdgeInsets.all(16),
-                child: const Icon(Icons.arrow_right_alt_outlined),
+              const Padding(
+                padding: EdgeInsets.all(16),
+                child: Icon(Icons.arrow_right_alt_outlined),
               ),
-              Text(
-                  'Result: ${_result?.toString() ?? 'waiting for valid input'}'),
+              Text('Result: ${_result?.toString() ?? 'waiting for valid input'}'),
             ],
           ),
         ),
@@ -1009,13 +1017,13 @@ class _MathExpressionsPageState extends State<_MathExpressionsPage> {
 }
 
 class _FormFieldPage extends StatelessWidget {
-  const _FormFieldPage({Key? key}) : super(key: key);
+  const _FormFieldPage({final Key? key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(final BuildContext context) {
     return Form(
       child: Builder(
-        builder: (context) {
+        builder: (final context) {
           return Column(
             children: [
               Padding(
@@ -1030,8 +1038,8 @@ class _FormFieldPage extends StatelessWidget {
                   textAlign: TextAlign.center,
                 ),
               ),
-              Padding(
-                padding: const EdgeInsets.all(32),
+              const Padding(
+                padding: EdgeInsets.all(32),
                 child: SizedBox(
                   width: 5e2,
                   child: Text(
@@ -1044,22 +1052,20 @@ class _FormFieldPage extends StatelessWidget {
               SizedBox(
                 width: 420,
                 child: MathFormField(
-                  validator: (value) {
+                  validator: (final value) {
                     if (value == null || value.isEmpty || value == r'\Box') {
                       return 'Missing expression (:';
                     }
 
                     try {
-                      TeXParser(value)
-                          .parse()
-                          .evaluate(EvaluationType.REAL, ContextModel());
+                      TeXParser(value).parse().evaluate(EvaluationType.REAL, ContextModel());
                       return null;
-                    } catch (_) {
+                    } on Object catch (_) {
                       return 'Invalid expression (:';
                     }
                   },
                   variables: [],
-                  decoration: InputDecoration(
+                  decoration: const InputDecoration(
                     hintText: 'Enter a valid expression',
                   ),
                 ),
@@ -1074,12 +1080,12 @@ class _FormFieldPage extends StatelessWidget {
                       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                         content: Row(
                           mainAxisAlignment: MainAxisAlignment.center,
-                          children: [Text('Form is valid :)')],
+                          children: [const Text('Form is valid :)')],
                         ),
                       ));
                     }
                   },
-                  child: Text('Submit form'),
+                  child: const Text('Submit form'),
                 ),
               )
             ],

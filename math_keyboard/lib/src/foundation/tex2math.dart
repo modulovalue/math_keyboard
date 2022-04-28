@@ -19,7 +19,7 @@ class TeXParser {
   /// The TeX String to parse.
   final String inputString;
 
-  List<dynamic> _stream = [];
+  List<dynamic> _stream = <dynamic>[];
   final _outputStack = <dynamic>[];
   final _operatorStack = <dynamic>[];
 
@@ -40,17 +40,14 @@ class TeXParser {
             (char('E') & pattern('+-').optional() & integer).optional())
         .flatten()
         .map(num.parse);
-
-    final pi = (string('{') & string(r'\pi') & string('}')).map((a) => math.pi);
-    final e = (string('{') & string('e') & string('}')).map((a) => math.e);
+    final pi = (string('{') & string(r'\pi') & string('}')).map((final a) => math.pi);
+    final e = (string('{') & string('e') & string('}')).map((final a) => math.e);
     final variable =
         (string('{') & letter().plus().flatten() & string('}')).pick(1);
-
-    final basic = (number | pi | e | variable).map((v) => [v, 'b']);
-
+    final basic = (number | pi | e | variable).map((final dynamic v) => <dynamic>[v, 'b']);
     final sqrt =
-        (string(r'\sqrt') & char('{').and()).map((v) => [r'\sqrt', 'f']);
-    final nrt = (string(r'\sqrt') & char('[').and()).map((v) => [r'\nrt', 'f']);
+        (string(r'\sqrt') & char('{').and()).map((final v) => [r'\sqrt', 'f']);
+    final nrt = (string(r'\sqrt') & char('[').and()).map((final v) => [r'\nrt', 'f']);
     final simpleFunction = ((string(r'\sin^{-1}') |
                 string(r'\cos^{-1}') |
                 string(r'\tan^{-1}') |
@@ -60,92 +57,73 @@ class TeXParser {
                 string(r'\ln')) &
             string('(').and())
         .pick(0)
-        .map((v) => [v, 'f']);
+        .map((final dynamic v) => <dynamic>[v, 'f']);
     final otherFunction =
-        (string(r'\frac') | string(r'\log')).map((v) => [v, 'f']);
+        (string(r'\frac') | string(r'\log')).map((final dynamic v) => <dynamic>[v, 'f']);
     final function = simpleFunction | otherFunction | sqrt | nrt;
-
     final lp = (string('(') | char('{') | string(r'\left|') | char('['))
-        .map((v) => [v, 'l']);
-
+        .map((final dynamic v) => <dynamic>[v, 'l']);
     final rp = (string(')') | char('}') | string(r'\right|') | char(']'))
-        .map((v) => [v, 'r']);
-
-    final plus = char('+').map((v) => [
+        .map((final dynamic v) => <dynamic>[v, 'r']);
+    final plus = char('+').map((final v) => [
           v,
           ['o', 2, 'l'],
         ]);
-
-    final minus = char('-').map((v) => [
+    final minus = char('-').map((final v) => [
           v,
           ['o', 2, 'l'],
         ]);
-
-    final times = (string(r'\times') | string(r'\cdot')).map((v) => [
+    final times = (string(r'\times') | string(r'\cdot')).map((final dynamic v) => <dynamic>[
           v,
           ['o', 3, 'l'],
         ]);
-
-    final divide = string(r'\div').map((v) => [
+    final divide = string(r'\div').map((final v) => [
           v,
           ['o', 3, 'l'],
         ]);
-
-    final expo = char('^').map((v) => [
+    final expo = char('^').map((final v) => [
           v,
           ['o', 4, 'r'],
         ]);
-
-    final factorial = char('!').map((v) => [
+    final factorial = char('!').map((final v) => [
           v,
           ['o', 5, 'l'],
         ]);
-
-    final percent = string(r'\%').map((v) => [
+    final percent = string(r'\%').map((final v) => [
           v,
           ['o', 5, 'l'],
         ]);
-
     final operator = plus | minus | times | divide | expo | factorial | percent;
-
-    final subNumber = (char('_') & digit().map(int.parse)).pick(1);
-
+    final subNumber = (char('_') & digit().map<int>(int.parse)).pick(1);
     final underline = char('_');
-
-    final other = (subNumber | underline).map((v) => [v, 'u']);
-
+    final other = (subNumber | underline).map((final dynamic v) => <dynamic>[v, 'u']);
     final tokenize =
         (basic | function | lp | rp | operator | other).star().end();
-
     final tex = inputString.replaceAll(' ', '');
     _stream = tokenize.parse(tex).value;
-
-    if (_stream[0][0] == '-' && _stream[1][1].contains(RegExp('[bfl]'))) {
+    if ((_stream[0] as List)[0] == '-' && ((_stream[1] as List<dynamic>)[1] as String).contains(RegExp('[bfl]'))) {
       _stream.insert(0, [0, 'b']);
     }
-    if (_stream[0][0] == '!') {
-      throw 'Unable to parse';
+    if ((_stream[0] as List )[0] == '!') {
+      throw Exception('Unable to parse');
     }
-
     for (var i = 0; i < _stream.length; i++) {
       /// wrong syntax: fr fo lr lo oo (b/r postfix or wrong)
       /// need times: bb bf bl rb rf rl !f !l
       /// negative number: -(bfl) / l-(bfl)
-
       // negative number
       if (i > 0 &&
           i < _stream.length - 1 &&
-          _stream[i - 1][1] == 'l' &&
-          _stream[i][0] == '-' &&
-          _stream[i + 1][1].contains(RegExp('[bfl]'))) {
+          (_stream[i - 1] as List)[1] == 'l' &&
+          (_stream[i] as List)[0] == '-' &&
+          ((_stream[i + 1] as List)[1] as String).contains(RegExp('[bfl]'))) {
         _stream.insert(i, [0, 'b']);
         i++;
         continue;
       }
-
       // add ×
-      if (i < _stream.length - 1 && _stream[i][1] == 'b') {
-        switch (_stream[i + 1][1]) {
+      if (i < _stream.length - 1 && (_stream[i] as List)[1] == 'b') {
+        switch ((_stream[i + 1] as List)[1]) {
           case 'b':
           case 'f':
           case 'l':
@@ -160,9 +138,9 @@ class TeXParser {
         }
         continue;
       }
-      if (i < _stream.length - 1 && _stream[i][1] == 'r') {
+      if (i < _stream.length - 1 && (_stream[i] as List)[1] == 'r') {
         var insertTimes = false;
-        switch (_stream[i + 1][1]) {
+        switch ((_stream[i + 1] as List)[1]) {
           case 'b':
           case 'f':
             insertTimes = true;
@@ -170,9 +148,9 @@ class TeXParser {
           case 'l':
             // In case there is a closing parenthesis directly followed by an
             // opening one, some further checks are necessary.
-            if (_stream[i][0] == ')' && _stream[i + 1][0] == '(') {
+            if ((_stream[i] as List)[0] == ')' && (_stream[i + 1] as List)[0] == '(') {
               insertTimes = true;
-            } else if (_stream[i][0] == '}' && _stream[i + 1][0] == '(') {
+            } else if ((_stream[i] as List)[0] == '}' && (_stream[i + 1] as List)[0] == '(') {
               // This case is unfavorable. If the '}' closes the second argument
               // of a fraction or marks the end of an exponent, we want to
               // insert 'times'. However, if '}' closes the base argument of a
@@ -180,16 +158,16 @@ class TeXParser {
               // That's why we have to check what's in front of the matching
               // opening '{'.
               final stack = ['}'];
-              var j = i - 1;
+              int j = i - 1;
               while (j > 0 && stack.isNotEmpty) {
-                if (_stream[j][0] == '{') {
+                if ((_stream[j] as List)[0] == '{') {
                   stack.removeLast();
-                } else if (_stream[j][0] == '}') {
+                } else if ((_stream[j] as List)[0] == '}') {
                   stack.add('}');
                 }
                 j--;
               }
-              if (j >= 0 && _stream[j][0] != '_') {
+              if (j >= 0 && (_stream[j] as List)[0] != '_') {
                 insertTimes = true;
               }
             }
@@ -206,8 +184,8 @@ class TeXParser {
         }
         continue;
       }
-      if (i < _stream.length - 1 && _stream[i][0] == '!') {
-        switch (_stream[i + 1][1]) {
+      if (i < _stream.length - 1 && (_stream[i] as List)[0] == '!') {
+        switch ((_stream[i + 1] as List )[1]) {
           case 'l':
           case 'f':
             _stream.insert(i + 1, [
@@ -223,14 +201,14 @@ class TeXParser {
       }
 
       // check wrong syntax
-      if (i > 0 && (_stream[i][1] == 'r' || _stream[i][1] is List)) {
-        if (_stream[i - 1][1] is List && _stream[i - 1][1][1] != 5) {
-          throw 'Unable to parse';
+      if (i > 0 && ((_stream[i] as List)[1] == 'r' || (_stream[i] as List)[1] is List)) {
+        if ((_stream[i - 1] as List)[1] is List && ((_stream[i - 1] as List)[1] as List)[1] != 5) {
+          throw Exception('Unable to parse');
         }
-        switch (_stream[i - 1][1]) {
+        switch ((_stream[i - 1] as List)[1]) {
           case 'l':
           case 'f':
-            throw 'Unable to parse';
+            throw Exception('Unable to parse');
           default:
             break;
         }
@@ -243,23 +221,23 @@ class TeXParser {
   // ignore: code-metrics
   void shuntingYard() {
     for (var i = 0; i < _stream.length; i++) {
-      switch (_stream[i][1]) {
+      switch ((_stream[i] as List)[1]) {
         case 'b':
-          _outputStack.add(_stream[i][0]);
+          _outputStack.add((_stream[i] as List)[0]);
           break;
         case 'f':
           _operatorStack.add(_stream[i]);
           break;
         case 'l':
-          if (_stream[i][0] == r'\left|') {
+          if ((_stream[i] as List)[0] == r'\left|') {
             _operatorStack.add([r'\abs', 'f']);
           }
           _operatorStack.add(_stream[i]);
           break;
         case 'r':
           while (_operatorStack.isNotEmpty) {
-            if (_operatorStack.last[1] != 'l') {
-              _outputStack.add(_operatorStack.last[0]);
+            if ((_operatorStack.last as List)[1] != 'l') {
+              _outputStack.add((_operatorStack.last as List)[0]);
               _operatorStack.removeLast();
               continue;
             } else {
@@ -269,25 +247,25 @@ class TeXParser {
           }
           break;
         case 'u':
-          if (_stream[i][0] is num) {
-            _outputStack.add(_stream[i][0]);
+          if ((_stream[i] as List)[0] is num) {
+            _outputStack.add((_stream[i] as List)[0]);
           }
           break;
         default:
           while (_operatorStack.isNotEmpty) {
-            if (_operatorStack.last[1] == 'f') {
-              _outputStack.add(_operatorStack.last[0]);
+            if ((_operatorStack.last as List)[1] == 'f') {
+              _outputStack.add((_operatorStack.last as List)[0]);
               _operatorStack.removeLast();
               continue;
             }
-            if (_operatorStack.last[1] is List) {
-              if (_operatorStack.last[1][1] > _stream[i][1][1]) {
-                _outputStack.add(_operatorStack.last[0]);
+            if ((_operatorStack.last as List)[1] is List) {
+              if ((((_operatorStack.last as List)[1] as List)[1] as num) > (((_stream[i] as List)[1] as List)[1] as num)) {
+                _outputStack.add((_operatorStack.last as List)[0]);
                 _operatorStack.removeLast();
                 continue;
-              } else if (_operatorStack.last[1][1] == _stream[i][1][1] &&
-                  _operatorStack.last[1][2] == 'l') {
-                _outputStack.add(_operatorStack.last[0]);
+              } else if (((_operatorStack.last as List)[1] as List)[1] == ((_stream[i] as List)[1] as List)[1] &&
+                  ((_operatorStack.last as List)[1] as List)[2] == 'l') {
+                _outputStack.add((_operatorStack.last as List)[0]);
                 _operatorStack.removeLast();
                 continue;
               }
@@ -298,7 +276,7 @@ class TeXParser {
       }
     }
     while (_operatorStack.isNotEmpty) {
-      _outputStack.add(_operatorStack.last[0]);
+      _outputStack.add((_operatorStack.last as List)[0]);
       _operatorStack.removeLast();
     }
   }
@@ -388,14 +366,14 @@ class TeXParser {
         case '!':
           try {
             addFactorial(result);
-            // ignore: empty_catches
-          } catch (e) {}
+            // TODO very bad
+          } on Object catch (_) {}
           break;
         default:
           if (_outputStack[i] is String) {
-            result.add(Variable(_outputStack[i]));
+            result.add(Variable(_outputStack[i] as String));
           } else {
-            result.add(Number(_outputStack[i]));
+            result.add(Number(_outputStack[i] as num));
           }
       }
     }
@@ -403,13 +381,13 @@ class TeXParser {
     if (result.length == 1) {
       return result[0];
     } else {
-      throw 'Parse Error';
+      throw Exception('Parse Error');
     }
   }
 
   /// Checks whether factorial can be calculated.
-  void addFactorial(List<Expression> result) {
-    final t = result.removeLast().evaluate(EvaluationType.REAL, ContextModel());
+  void addFactorial(final List<Expression> result) {
+    final t = result.removeLast().evaluate(EvaluationType.REAL, ContextModel()) as num;
     if (t.ceil() == t.floor() && t >= 0 && t < 20) {
       var a = t.toInt();
       var y = 1;
@@ -419,7 +397,7 @@ class TeXParser {
       }
       result.add(Number(y));
     } else {
-      throw 'Unable to do factorial';
+      throw Exception('Unable to do factorial');
     }
   }
 }

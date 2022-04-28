@@ -18,7 +18,6 @@ void main() {
         Parser().parse(exp).toString(),
       );
     });
-
     test('e', () {
       const tex = '{x}+{e}^2';
       const exp = 'x+$e^2';
@@ -28,7 +27,6 @@ void main() {
       );
     });
   });
-
   group('multiplication', () {
     test('cdot', () {
       const tex = r'23\cdot{x}';
@@ -38,7 +36,6 @@ void main() {
         Parser().parse(exp).toString(),
       );
     });
-
     test('times', () {
       const tex = r'23\times({var})';
       const exp = '23*var';
@@ -47,7 +44,6 @@ void main() {
         Parser().parse(exp).toString(),
       );
     });
-
     test('implicit', () {
       const tex = '23{c}';
       const exp = '23*c';

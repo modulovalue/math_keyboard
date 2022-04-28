@@ -1,10 +1,10 @@
 import 'dart:math' as math;
 
 import 'package:math_expressions/math_expressions.dart';
-import 'package:math_keyboard/src/foundation/node.dart';
+import 'node.dart';
 
 /// Converts the input [mathExpression] to a [TeXNode].
-TeXNode convertMathExpressionToTeXNode(Expression mathExpression) {
+TeXNode convertMathExpressionToTeXNode(final Expression mathExpression) {
   // The AST is not properly built (as in it is not well designed) because
   // nodes do not have a common super type. If they had, it would be easy to
   // convert the expression tree to a TeX tree. Like this we need two different
@@ -15,7 +15,7 @@ TeXNode convertMathExpressionToTeXNode(Expression mathExpression) {
   return node;
 }
 
-List<TeX> _convertToTeX(Expression mathExpression, TeXNode parent) {
+List<TeX> _convertToTeX(final Expression mathExpression, final TeXNode parent) {
   if (mathExpression is UnaryOperator) {
     return [
       if (mathExpression is UnaryMinus)
@@ -74,19 +74,19 @@ List<TeX> _convertToTeX(Expression mathExpression, TeXNode parent) {
     }
     // Wrap with parentheses to keep precedence.
     return [
-      TeXLeaf('('),
+      const TeXLeaf('('),
       ...result,
-      TeXLeaf(')'),
+      const TeXLeaf(')'),
     ];
   }
   if (mathExpression is Literal) {
     if (mathExpression is Number) {
       final number = mathExpression.value as double;
       if (number == math.pi) {
-        return [TeXLeaf(r'{\pi}')];
+        return [const TeXLeaf(r'{\pi}')];
       }
       if (number == math.e) {
-        return [TeXLeaf('{e}')];
+        return [const TeXLeaf('{e}')];
       }
       final adjusted = number.toInt() == number ? number.toInt() : number;
       return [
@@ -96,7 +96,7 @@ List<TeX> _convertToTeX(Expression mathExpression, TeXNode parent) {
     if (mathExpression is Variable) {
       if (mathExpression is BoundVariable) {
         return [
-          ..._convertToTeX(mathExpression.value, parent),
+          ..._convertToTeX(mathExpression.value as Expression, parent),
         ];
       }
 

@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_math_fork/flutter_math.dart';
-import 'package:math_keyboard/src/custom_key_icons/custom_key_icons.dart';
-import 'package:math_keyboard/src/foundation/keyboard_button.dart';
-import 'package:math_keyboard/src/widgets/decimal_separator.dart';
-import 'package:math_keyboard/src/widgets/keyboard_button.dart';
-import 'package:math_keyboard/src/widgets/math_field.dart';
-import 'package:math_keyboard/src/widgets/view_insets.dart';
+import '../custom_key_icons/custom_key_icons.dart';
+import '../foundation/keyboard_button.dart';
+import 'decimal_separator.dart';
+import 'keyboard_button.dart';
+import 'math_field.dart';
+import 'view_insets.dart';
 
 /// Enumeration for the types of keyboard that a math keyboard can adopt.
 ///
@@ -27,12 +27,12 @@ enum MathKeyboardType {
 class MathKeyboard extends StatelessWidget {
   /// Constructs a [MathKeyboard].
   const MathKeyboard({
-    Key? key,
-    required this.controller,
-    this.type = MathKeyboardType.expression,
-    this.variables = const [],
-    this.onSubmit,
-    this.insetsState,
+    required final this.controller,
+    final Key? key,
+    final this.type = MathKeyboardType.expression,
+    final this.variables = const [],
+    final this.onSubmit,
+    final this.insetsState,
     this.slideAnimation,
   }) : super(key: key);
 
@@ -63,12 +63,11 @@ class MathKeyboard extends StatelessWidget {
   final VoidCallback? onSubmit;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(final BuildContext context) {
     final curvedSlideAnimation = CurvedAnimation(
-      parent: slideAnimation ?? AlwaysStoppedAnimation(1),
+      parent: slideAnimation ?? const AlwaysStoppedAnimation(1),
       curve: Curves.ease,
     );
-
     return SlideTransition(
       position: Tween<Offset>(
         begin: const Offset(0, 1),
@@ -142,10 +141,10 @@ class MathKeyboard extends StatelessWidget {
 /// Widget that reports about the math keyboard body's bottom inset.
 class _KeyboardBody extends StatefulWidget {
   const _KeyboardBody({
-    Key? key,
-    this.insetsState,
-    this.slideAnimation,
-    required this.child,
+    required final this.child,
+    final Key? key,
+    final this.insetsState,
+    final this.slideAnimation,
   }) : super(key: key);
 
   final MathKeyboardViewInsetsState? insetsState;
@@ -171,7 +170,7 @@ class _KeyboardBodyState extends State<_KeyboardBody> {
   }
 
   @override
-  void didUpdateWidget(_KeyboardBody oldWidget) {
+  void didUpdateWidget(final _KeyboardBody oldWidget) {
     super.didUpdateWidget(oldWidget);
 
     if (oldWidget.insetsState != widget.insetsState) {
@@ -197,26 +196,26 @@ class _KeyboardBodyState extends State<_KeyboardBody> {
     _reportInsets(widget.insetsState);
   }
 
-  void _removeInsets(MathKeyboardViewInsetsState? insetsState) {
+  void _removeInsets(final MathKeyboardViewInsetsState? insetsState) {
     if (insetsState == null) return;
-    SchedulerBinding.instance!.addPostFrameCallback((_) {
+    SchedulerBinding.instance!.addPostFrameCallback((final _) {
       widget.insetsState![ObjectKey(this)] = null;
     });
   }
 
-  void _reportInsets(MathKeyboardViewInsetsState? insetsState) {
+  void _reportInsets(final MathKeyboardViewInsetsState? insetsState) {
     if (insetsState == null) return;
-    SchedulerBinding.instance!.addPostFrameCallback((_) {
+    SchedulerBinding.instance!.addPostFrameCallback((final _) {
       if (!mounted) return;
 
-      final renderBox = context.findRenderObject() as RenderBox;
+      final renderBox = (context.findRenderObject() as RenderBox?)!;
       insetsState[ObjectKey(this)] =
           renderBox.size.height * (widget.slideAnimation?.value ?? 1);
     });
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(final BuildContext context) {
     _reportInsets(widget.insetsState);
     return widget.child;
   }
@@ -226,9 +225,9 @@ class _KeyboardBodyState extends State<_KeyboardBody> {
 class _Variables extends StatelessWidget {
   /// Constructs a [_Variables] Widget.
   const _Variables({
-    Key? key,
-    required this.controller,
-    required this.variables,
+    required final this.controller,
+    required final this.variables,
+    final Key? key,
   }) : super(key: key);
 
   /// The editing controller for the math field that the variables are connected
@@ -239,17 +238,17 @@ class _Variables extends StatelessWidget {
   final List<String> variables;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(final BuildContext context) {
     return Container(
       height: 54,
       color: Colors.grey[900],
       child: AnimatedBuilder(
         animation: controller,
-        builder: (context, child) {
+        builder: (final context, final child) {
           return ListView.separated(
             itemCount: variables.length,
             scrollDirection: Axis.horizontal,
-            separatorBuilder: (context, index) {
+            separatorBuilder: (final context, final index) {
               return Center(
                 child: Container(
                   height: 24,
@@ -258,7 +257,7 @@ class _Variables extends StatelessWidget {
                 ),
               );
             },
-            itemBuilder: (context, index) {
+            itemBuilder: (final context, final index) {
               return SizedBox(
                 width: 56,
                 child: _VariableButton(
@@ -278,11 +277,11 @@ class _Variables extends StatelessWidget {
 class _Buttons extends StatelessWidget {
   /// Constructs a [_Buttons] Widget.
   const _Buttons({
-    Key? key,
-    required this.controller,
-    this.page1,
-    this.page2,
-    this.onSubmit,
+    required final this.controller,
+    final Key? key,
+    final this.page1,
+    final this.page2,
+    final this.onSubmit,
   }) : super(key: key);
 
   /// The editing controller for the math field that the variables are connected
@@ -301,12 +300,12 @@ class _Buttons extends StatelessWidget {
   final VoidCallback? onSubmit;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(final BuildContext context) {
     return SizedBox(
       height: 230,
       child: AnimatedBuilder(
         animation: controller,
-        builder: (context, child) {
+        builder: (final context, final child) {
           final layout =
               controller.secondPage ? page2! : page1 ?? numberKeyboard;
           return Column(
@@ -381,14 +380,14 @@ class _Buttons extends StatelessWidget {
 class _BasicButton extends StatelessWidget {
   /// Constructs a [_BasicButton].
   const _BasicButton({
-    Key? key,
-    required this.flex,
-    this.label,
-    this.icon,
-    this.onTap,
-    this.asTex = false,
-    this.highlightLevel = 0,
-  })  : assert(label != null || icon != null),
+    required final this.flex,
+    final Key? key,
+    final this.label,
+    final this.icon,
+    final this.onTap,
+    final this.asTex = false,
+    final this.highlightLevel = 0,
+  })  : assert(label != null || icon != null, ""),
         super(key: key);
 
   /// The flexible flex value.
@@ -410,7 +409,7 @@ class _BasicButton extends StatelessWidget {
   final int highlightLevel;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(final BuildContext context) {
     Widget result;
     if (label == null) {
       result = Icon(
@@ -463,11 +462,11 @@ class _BasicButton extends StatelessWidget {
 class _NavigationButton extends StatelessWidget {
   /// Constructs a [_NavigationButton].
   const _NavigationButton({
-    Key? key,
-    required this.flex,
-    this.icon,
-    this.iconSize = 36,
-    this.onTap,
+    required final this.flex,
+    final Key? key,
+    final this.icon,
+    final this.iconSize = 36,
+    final this.onTap,
   }) : super(key: key);
 
   /// The flexible flex value.
@@ -483,7 +482,7 @@ class _NavigationButton extends StatelessWidget {
   final VoidCallback? onTap;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(final BuildContext context) {
     return Expanded(
       flex: flex ?? 2,
       child: KeyboardButton(
@@ -504,9 +503,9 @@ class _NavigationButton extends StatelessWidget {
 class _VariableButton extends StatelessWidget {
   /// Constructs a [_VariableButton] widget.
   const _VariableButton({
-    Key? key,
-    required this.name,
-    this.onTap,
+    required final this.name,
+    final Key? key,
+    final this.onTap,
   }) : super(key: key);
 
   /// The variable name.
@@ -516,7 +515,7 @@ class _VariableButton extends StatelessWidget {
   final VoidCallback? onTap;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(final BuildContext context) {
     return KeyboardButton(
       onTap: onTap,
       child: Math.tex(
